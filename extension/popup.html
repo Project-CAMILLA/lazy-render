@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Lazy Render</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        width: 270px;
+        margin: 0;
+        padding: 14px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+        color: #e8e8e8;
+        background: #121212;
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 2px;
+        color: #fff;
+      }
+      .subtitle {
+        font-size: 11px;
+        color: #9aa0a6;
+        margin-bottom: 12px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        gap: 8px;
+      }
+      label { flex: 1; }
+      input[type="number"] {
+        width: 56px;
+        padding: 3px 5px;
+        border: 1px solid #333;
+        border-radius: 4px;
+        background: #1e1e1e;
+        color: #e8e8e8;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 34px;
+        height: 20px;
+        flex: none;
+      }
+      .switch input { opacity: 0; width: 0; height: 0; }
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #333;
+        transition: 0.15s;
+        border-radius: 20px;
+      }
+      .slider::before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.15s;
+        border-radius: 50%;
+      }
+      input:checked + .slider { background-color: #5b8def; }
+      input:checked + .slider::before { transform: translateX(14px); }
+      .stat {
+        margin-top: 12px;
+        padding: 8px 10px;
+        background: #1e1e1e;
+        border-radius: 6px;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .stat strong { color: #5b8def; }
+      .muted { color: #9aa0a6; }
+      hr { border: none; border-top: 1px solid #262626; margin: 10px 0; }
+      .section-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #9aa0a6;
+        margin: 0 0 6px;
+      }
+      .segment {
+        display: flex;
+        gap: 4px;
+        background: #1e1e1e;
+        border-radius: 8px;
+        padding: 3px;
+        margin-bottom: 4px;
+      }
+      .segment button {
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: #9aa0a6;
+        font: inherit;
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 6px 4px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .segment button.active {
+        background: #5b8def;
+        color: #fff;
+      }
+      .theme-hint {
+        font-size: 10.5px;
+        color: #9aa0a6;
+        line-height: 1.4;
+        margin: 0 0 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lazy Render</h1>
+    <div class="subtitle" id="site-status">Checking this tab&hellip;</div>
+
+    <p class="section-label">Appearance</p>
+    <div class="segment">
+      <button type="button" data-theme-mode="light">Light</button>
+      <button type="button" data-theme-mode="dark">Dark</button>
+      <button type="button" data-theme-mode="trueDark">True Dark</button>
+    </div>
+    <p class="theme-hint">Applies to this popup's pages too — Dark/True Dark force a dark look even on sites without their own.</p>
+
+    <p class="section-label">Booster</p>
+    <div class="row">
+      <label for="enabled">Enabled</label>
+      <label class="switch">
+        <input type="checkbox" id="enabled" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <hr />
+
+    <div class="row">
+      <label for="keepVisible" title="Most-recent turns kept rendered">Visible turns (10–300)</label>
+      <input type="number" id="keepVisible" min="10" max="300" />
+    </div>
+    <div class="row">
+      <label for="revealBatch" title="How many older turns 'Older' reveals at a time">Reveal batch (5–100)</label>
+      <input type="number" id="revealBatch" min="5" max="100" />
+    </div>
+    <div class="row">
+      <label for="autoReveal" title="Reveal older turns automatically when scrolled near the top">Reveal older turns near top</label>
+      <label class="switch">
+        <input type="checkbox" id="autoReveal" />
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="row">
+      <label for="showBadge" title="Floating pill on the chat page">Show status pill</label>
+      <label class="switch">
+        <input type="checkbox" id="showBadge" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="stat" id="stats">&nbsp;</div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

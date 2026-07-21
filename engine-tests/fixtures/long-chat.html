@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Long chat fixture</title>
+    <style>
+      html, body { margin: 0; background: #121212; color: #eee; font: 15px/1.5 system-ui, sans-serif; }
+      /* Mimic the real sites: an inner scroll region isn't required — these
+         sites scroll the window/document, which is what the engine's
+         window.scrollBy/scrollingElement path targets. */
+      #thread { padding: 16px; }
+      [data-testid^="conversation-turn-"] {
+        min-height: 120px;
+        margin: 0 0 14px;
+        padding: 12px 14px;
+        background: #1e1e1e;
+        border-radius: 10px;
+      }
+      /* Fallback-mode container: a real inner scroll region whose children
+         carry NO recognizable selector, so the engine must fall back to the
+         largest-scrollable-container heuristic to find them. */
+      #scrollbox {
+        width: 900px; height: 500px; overflow-y: auto; padding: 16px;
+      }
+      #scrollbox > .row {
+        min-height: 120px; margin: 0 0 14px; padding: 12px 14px;
+        background: #1e1e1e; border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div id="thread"></div>
+    </main>
+    <script>
+      // Build a synthetic thread of N turns whose wrapper matches ChatGPT's
+      // real selector [data-testid^="conversation-turn-"]. Exposed helpers let
+      // the Playwright test simulate the two SPA behaviours the engine must
+      // survive: appending new turns, and replacing the whole list subtree
+      // (as happens when navigating between conversations).
+      const thread = document.getElementById('thread');
+
+      function makeTurn(i) {
+        const el = document.createElement('div');
+        el.setAttribute('data-testid', 'conversation-turn-' + i);
+        el.textContent = 'Turn ' + i + ' — ' + 'lorem ipsum dolor sit amet '.repeat(6);
+        return el;
+      }
+
+      window.__fixture = {
+        seed(n) {
+          thread.innerHTML = '';
+          for (let i = 0; i < n; i++) thread.appendChild(makeTurn(i));
+        },
+        append(n) {
+          const base = thread.children.length;
+          for (let i = 0; i < n; i++) thread.appendChild(makeTurn(base + i));
+        },
+        // Simulate a full subtree replacement (conversation switch): brand-new
+        // DOM nodes, old references invalidated.
+        replaceAll(n) {
+          const fresh = document.createElement('div');
+          fresh.id = 'thread';
+          for (let i = 0; i < n; i++) fresh.appendChild(makeTurn(i));
+          thread.replaceWith(fresh);
+        },
+      };
+
+      const params = new URLSearchParams(location.search);
+      const initial = Number(params.get('n') || '120');
+      if (params.get('mode') === 'fallback') {
+        // Render a scrollable container of selector-less rows: the specific
+        // selectors match nothing, forcing the fallback heuristic to kick in.
+        thread.remove();
+        const box = document.createElement('div');
+        box.id = 'scrollbox';
+        for (let i = 0; i < initial; i++) {
+          const row = document.createElement('div');
+          row.className = 'row';
+          row.textContent = 'Row ' + i + ' — ' + 'lorem ipsum dolor sit amet '.repeat(6);
+          box.appendChild(row);
+        }
+        document.querySelector('main').appendChild(box);
+      } else {
+        window.__fixture.seed(initial);
+      }
+    </script>
+  </body>
+</html>

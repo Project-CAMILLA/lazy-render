@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Lazy Render",
+    "slug": "lazy-render",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#121212",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lazyrender.app"
+    },
+    "android": {
+      "package": "com.lazyrender.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#121212",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
