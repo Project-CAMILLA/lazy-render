@@ -43,3 +43,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# Editor / assistant tooling — keep local, out of the repo
+.claude/
