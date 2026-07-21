@@ -92,30 +92,6 @@ is a one-click component install.
 
 > The engine tests need Playwright's Chromium: `pip install playwright && python3 -m playwright install chromium`.
 
-## Giving it to friends
-
-- **Android (one-off)**: send them `app-debug.apk`; they install it directly
-  (allow "install unknown apps"). Done.
-- **Android (update channel via Obtainium)**: attach the APK to a **GitHub
-  Release**; friends point [Obtainium](https://github.com/ImranR98/Obtainium)
-  at the repo URL and it installs + auto-updates on each new release — no Play
-  Store, works great on GrapheneOS. **Important:** sign every build with one
-  **release keystore you keep** (not the per-machine debug key). Android/
-  Obtainium only accept an update signed with the same key as the installed
-  version, so a debug-signed APK can't be updated in place. A **private** repo
-  additionally needs a GitHub PAT configured in each friend's Obtainium — a
-  public repo avoids that. A release build (`./gradlew assembleRelease` with a
-  signingConfig, ABI splits + minify) is also ~40–60MB vs. the 163MB debug APK.
-- **iPhone**: Apple won't let a non-App-Store app onto a phone without signing.
-  The no-cost path is **free provisioning**: a friend clones this repo, opens the
-  generated `ios/` project in **Xcode on a Mac**, selects their own Apple ID as the
-  signing team, and builds to their device. Caveats: needs a Mac; the app stops
-  launching after **7 days** and must be rebuilt; it's a developer-setup task, not
-  a tap-to-install. Tools like **AltStore/SideStore** automate the weekly re-sign
-  over Wi-Fi. If several non-developer friends want it, a paid Apple Developer
-  account ($99/yr) + TestFlight is less ongoing hassle. No Mac is needed to
-  *compile* iOS if you use EAS Build (cloud) — the Mac is only for the *install*.
-
 ## Known limitations
 
 - **OAuth logins (Google/Microsoft SSO) may be rejected inside a WebView.** Prefer
